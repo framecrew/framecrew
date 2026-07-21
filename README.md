@@ -4,7 +4,7 @@
 
 **A single-shot Hermes agent that edits your footage for you. Drop clips, get a finished cut.**
 
-FrameCrew is a crew of video-editing agents that run on [Hermes](https://github.com/hermes). You drop your footage into a folder, add a short `event.txt` brief, and confirm on your phone — then the crew cuts, trims, colors, titles, adds transitions, cleans audio, enhances stills, runs QC, and delivers a finished MP4 plus a ready-to-open DaVinci Resolve project. All in one shot.
+FrameCrew is a crew of video-editing agents that run on [Hermes](https://hermes-agent.nousresearch.com/). You drop your footage into a folder, add a short `event.txt` brief, and confirm on your phone — then the crew cuts, trims, colors, titles, adds transitions, cleans audio, enhances stills, runs QC, and delivers a finished MP4 plus a ready-to-open DaVinci Resolve project. All in one shot.
 
 > ⚠️ **Status: early / work in progress.** The media work runs on your own machine (FFmpeg, Whisper, DaVinci Resolve); the agents reason through a hosted LLM API. Building toward a verified `v0.1.0`. See [Roadmap](#roadmap).
 
@@ -29,7 +29,7 @@ New to this? Follow along — it's four steps and you only do steps 1–3 once.
 
 You need these on your Mac (Apple Silicon):
 
-- **[Hermes](https://github.com/hermes)** — the agent runtime that runs the crew
+- **[Hermes](https://hermes-agent.nousresearch.com/)** — the agent runtime that runs the crew
 - **FFmpeg 8+, Whisper, PySceneDetect, ImageMagick, Real-ESRGAN, rembg** — the media tools
 - **DaVinci Resolve Studio** — for the final project delivery (Studio only; the free version can't script)
 - An **LLM API key** from any OpenAI-compatible provider (OpenAI, OpenRouter, Together, …)

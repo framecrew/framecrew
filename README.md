@@ -1,7 +1,5 @@
 # FrameCrew
 
-[![CI](https://github.com/framecrew/framecrew/actions/workflows/ci.yml/badge.svg)](https://github.com/framecrew/framecrew/actions/workflows/ci.yml)
-
 **Drop your footage. Get a finished edit.**
 
 FrameCrew is a local-first, agent-driven video editing pipeline. You drop your clips into a project folder, add a short `event.txt` brief, confirm on your phone, and a crew of agents handles the rest — cut, trim, color, titles, transitions, audio, enhancement, QC, and delivery — producing a finished MP4 plus a ready-to-open DaVinci Resolve project.

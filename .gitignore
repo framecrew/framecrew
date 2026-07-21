@@ -1,0 +1,40 @@
+# --- Secrets / environment ---
+.env
+*.token
+*.key
+gateway_state.json
+
+# --- Local (non-example) config ---
+config/framecrew.yaml
+
+# --- Footage & per-project working dirs (never commit media) ---
+Projects/
+/Projects/
+raw/
+proxy/
+output/
+stills/
+transcripts/
+davinci/
+*.mp4
+*.mov
+*.mxf
+*.arw
+*.cr3
+*.cube
+
+# --- Models & large artifacts ---
+models/
+*.gguf
+*.bin
+
+# --- Python ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+*.log

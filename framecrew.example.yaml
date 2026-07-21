@@ -1,0 +1,59 @@
+# FrameCrew configuration (example)
+# Copy to config/framecrew.yaml and edit for your studio.
+# config/framecrew.yaml is git-ignored so your local settings stay private.
+
+brand:
+  name: "Your Studio Name"
+  # macOS font path example: /System/Library/Fonts/Helvetica.ttc
+  title_font: "Helvetica"
+  title_color: "#D4AF37"   # gold
+  minimalist: true         # clean fades, no drop shadow
+
+paths:
+  projects_root: "~/FrameCrew/Projects"     # watch folder
+  templates_root: "~/FrameCrew/Templates"   # event.txt templates
+
+models:
+  # API-first (v0.1.0). Works with any OpenAI-compatible endpoint
+  # (OpenAI, OpenRouter, Together, a local proxy, etc.).
+  # Set OPENAI_API_KEY in .env; override OPENAI_BASE_URL to switch providers.
+  provider: "openai_compatible"
+  base_url: "${OPENAI_BASE_URL:-https://api.openai.com/v1}"
+  # Model names depend on your endpoint — the values below are examples.
+  fast_model: "gpt-4o-mini"       # routine execution: file ops, kanban, running skills
+  reasoning_model: "gpt-4o"       # hard reasoning: writing new skills, debugging
+  # NOTE: local-model routing (Ollama) is planned for a later release; see README roadmap.
+
+audio:
+  loudness:
+    web_delivery_lufs: -14
+    broadcast_lufs: -23
+  true_peak_db: -1.5
+
+delivery:
+  output_format: "1080p_MP4"
+  build_davinci_project: true   # requires DaVinci Resolve Studio open
+  notify_telegram: true         # requires TELEGRAM_BOT_TOKEN in .env
+
+# Per-event-type style presets. Add your own event types here.
+event_presets:
+  wedding:
+    pacing: slow_cinematic
+    color_mood: warm_gold          # warm midtones, lifted blacks
+    transitions: emotional_fades   # ~0.8s
+    music: instrumental_soft
+  boudoir:
+    pacing: very_slow
+    color_mood: rich_deep          # deep shadows, saturated golds
+    transitions: dissolves_only    # ~0.5s
+    music: minimal_ambient
+  street:
+    pacing: fast_energetic
+    color_mood: high_contrast      # punchy blacks, vivid mids
+    transitions: quick_cuts        # hard cuts
+    music: upbeat_rhythmic
+  film:
+    pacing: scene_driven
+    color_mood: cinematic_rec709
+    transitions: dialogue_cuts     # hard cut for dialogue, dissolve on scene change
+    music: broadcast

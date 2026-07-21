@@ -31,6 +31,13 @@ fi
 # --- Config ---
 [ -f config/framecrew.yaml ] && ok "config/framecrew.yaml present" || bad "config/framecrew.yaml missing" "cp config/framecrew.example.yaml config/framecrew.yaml"
 
+# --- Hermes ---
+HERMES_DIR="${HERMES_HOME:-$HOME/.hermes}"
+command -v hermes >/dev/null 2>&1 && ok "hermes CLI present" || bad "hermes CLI not found" "install Hermes (the agent runtime)"
+skill_count=$(ls "$HERMES_DIR"/skills/video/*.md 2>/dev/null | wc -l | tr -d ' ')
+[ "$skill_count" -ge 13 ] && ok "$skill_count skills loaded in Hermes" || bad "skills not loaded ($skill_count/13)" "run ./install.sh (or bash scripts/install_skills.sh)"
+[ -f "$HERMES_DIR/memories/user/model-routing.md" ] && ok "Hermes routing rules installed" || bad "routing rules missing" "run bash scripts/setup_hermes.sh"
+
 # --- DaVinci Resolve (optional, delivery only) ---
 if [ -d "/Applications/DaVinci Resolve/DaVinci Resolve.app" ]; then ok "DaVinci Resolve installed"; else
   printf "  \033[33m!\033[0m DaVinci Resolve not found (needed only for project delivery — Studio required)\n"; fi

@@ -1,0 +1,25 @@
+# FrameCrew Event Brief
+Event_Type: Film
+Event_Name: Short Film Title
+Date: 2026-06-14
+Location: Location
+Subjects: Cast
+
+# Edit Style
+Pacing: scene_driven
+Color_Mood: cinematic_rec709
+Transitions: dialogue_cuts
+Music: broadcast
+
+# Deliverable
+Target_Length: 5-8 minutes
+Output_Format: 1080p_MP4
+Audio_Spec: broadcast
+
+# Titles
+Opening_Title: Short Film Title
+Closing_Title: Your Studio Name
+Lower_Thirds: No
+
+# Notes
+Notes: Scene-driven. Cut on dialogue, dissolve on scene changes.

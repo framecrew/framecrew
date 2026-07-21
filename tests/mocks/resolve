@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Mock DaVinci Resolve API: records the call instead of building a project.
+mkdir -p tests/.work
+echo "[resolve-mock] $*" >> "${FRAMECREW_MOCK_LOG:-tests/.work/mock.log}"

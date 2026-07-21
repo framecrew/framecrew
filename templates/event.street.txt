@@ -1,0 +1,25 @@
+# FrameCrew Event Brief
+Event_Type: Street
+Event_Name: City Editorial
+Date: 2026-06-14
+Location: City
+Subjects: N/A
+
+# Edit Style
+Pacing: fast_energetic
+Color_Mood: high_contrast
+Transitions: quick_cuts
+Music: upbeat_rhythmic
+
+# Deliverable
+Target_Length: 1-2 minutes
+Output_Format: 1080p_MP4
+Audio_Spec: web_delivery
+
+# Titles
+Opening_Title: City Editorial
+Closing_Title: Your Studio Name
+Lower_Thirds: No
+
+# Notes
+Notes: Punchy, rhythmic cuts to the beat.

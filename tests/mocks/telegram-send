@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Mock Telegram sender: records the message instead of sending it.
+mkdir -p tests/.work
+echo "[telegram-mock] $*" >> "${FRAMECREW_MOCK_LOG:-tests/.work/mock.log}"

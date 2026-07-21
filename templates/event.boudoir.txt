@@ -1,0 +1,25 @@
+# FrameCrew Event Brief
+Event_Type: Boudoir
+Event_Name: Client Session
+Date: 2026-06-14
+Location: Studio
+Subjects: Client
+
+# Edit Style
+Pacing: very_slow
+Color_Mood: rich_deep
+Transitions: dissolves_only
+Music: minimal_ambient
+
+# Deliverable
+Target_Length: 3-5 minutes
+Output_Format: 1080p_MP4
+Audio_Spec: web_delivery
+
+# Titles
+Opening_Title: Your Studio Name
+Closing_Title: Your Studio Name
+Lower_Thirds: No
+
+# Notes
+Notes: Long holds. Keep it intimate and tasteful.

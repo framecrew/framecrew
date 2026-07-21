@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install FFmpeg
+        run: brew install ffmpeg
+
+      - name: Lint skills (structure + secret scan)
+        run: bash tests/lint_skills.sh
+
+      - name: Generate synthetic fixtures
+        run: bash tests/fixtures/make_fixtures.sh
+
+      - name: Cutting agent test
+        run: bash tests/test_cutting.sh
+
+      - name: QC gate test (pass + fail)
+        run: bash tests/test_qc.sh
+
+      - name: End-to-end smoke (mock mode)
+        run: bash tests/e2e_smoke.sh

@@ -1,0 +1,25 @@
+# FrameCrew Event Brief
+Event_Type: Wedding
+Event_Name: Firstname & Firstname Wedding
+Date: 2026-06-14
+Location: City, State
+Subjects: Partner One, Partner Two
+
+# Edit Style
+Pacing: slow_cinematic
+Color_Mood: warm_gold
+Transitions: emotional_fades
+Music: instrumental_soft
+
+# Deliverable
+Target_Length: 8-10 minutes
+Output_Format: 1080p_MP4
+Audio_Spec: web_delivery
+
+# Titles
+Opening_Title: Firstname & Firstname — June 2026
+Closing_Title: Your Studio Name
+Lower_Thirds: Yes
+
+# Notes
+Notes: Ceremony first, reception second. Highlight the first dance.

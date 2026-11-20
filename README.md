@@ -2,6 +2,18 @@
 
 FrameCrew is designed to take footage and an event brief, ask for approval, and coordinate an edit through Hermes. The original workflow includes creative editing, quality checks, and delivery to MP4 and DaVinci Resolve. To set up the Hermes workflow on macOS, run `bash install.sh` and follow the [Hermes kickoff instructions](KICKOFF.md). The full workflow still needs an end-to-end acceptance run.
 
+## Start a Hermes job without opening chat
+
+On Windows, install the FrameCrew skills and use the Hermes launcher that can reach your gateway. Each project needs an `event.txt` and footage in `raw/`.
+
+```powershell
+python hermes_job.py path/to/project prepare
+python hermes_job.py path/to/project approve --hermes path/to/hermes.exe
+python hermes_job.py path/to/project status
+```
+
+`prepare` runs the Windows Watcher checks. `approve` is the operator's explicit approval of that exact footage and brief. The runner invokes the original Hermes Editor Manager and checks for a QC report, a decodable MP4, and a Resolve archive. Use a fresh folder to retry a failed run.
+
 ## Standalone MP4 utility
 
 This utility turns an ordered list of clips into a single 720p MP4. It needs Python 3.11 or newer and FFmpeg 8 or newer with `ffprobe` and `libx264`. On macOS with Homebrew, run `bash install.sh --media-only`. On Windows, install the tools and put them on your PATH. No API key is needed.

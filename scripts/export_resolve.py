@@ -2,6 +2,7 @@
 import argparse
 from pathlib import Path
 import os
+import subprocess
 import sys
 from uuid import uuid4
 
@@ -79,19 +80,58 @@ def export(resolve, folder):
     return destination
 
 
+def lua_string(value):
+    delimiter = ""
+    while f"]{delimiter}]" in value:
+        delimiter += "="
+    return f"[{delimiter}[{value}]{delimiter}]"
+
+
+def console_command(folder):
+    name = folder.name
+    final = folder / "output" / f"{name}_final.mp4"
+    if not final.is_file() or not final.stat().st_size:
+        raise ValueError(f"Approved MP4 missing: {final}")
+    destination = folder / "davinci" / f"{name}.drp"
+    if destination.exists():
+        raise ValueError(f"Resolve export already exists: {destination}")
+    script = Path(__file__).with_name("export_resolve_in_app.lua")
+    body = " ".join(script.read_text(encoding="utf-8").splitlines())
+    media = folder / "output" / f"{name}_resolve.mov"
+    temporary = media.with_name(f"{uuid4().hex}.mov")
+    try:
+        subprocess.run(
+            ["ffmpeg", "-v", "error", "-nostdin", "-i", str(final), "-map", "0:v:0",
+             "-map", "0:a:0", "-c:v", "prores_ks", "-profile:v", "0",
+             "-pix_fmt", "yuv422p10le", "-c:a", "pcm_s16le", str(temporary)],
+            check=True, timeout=3600,
+        )
+        temporary.replace(media)
+    finally:
+        temporary.unlink(missing_ok=True)
+    destination.parent.mkdir(exist_ok=True)
+    args = ", ".join(lua_string(value) for value in
+                     (name, media.as_posix(), destination.as_posix()))
+    return f'{body}; print(FrameCrewExport(resolve, {args}))'
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--check", action="store_true")
     mode.add_argument("--approved-job", type=Path)
+    mode.add_argument("--console-job", type=Path)
     args = parser.parse_args()
     try:
-        resolve = connect()
-        if args.check:
-            print(f"Resolve connected: {resolve.GetProductName()} {resolve.GetVersionString()}")
+        if args.console_job:
+            print(console_command(args.console_job.resolve(strict=True)))
         else:
-            print(export(resolve, args.approved_job.resolve(strict=True)))
-    except (OSError, ValueError) as exc:
+            resolve = connect()
+            if args.check:
+                print(f"Resolve connected: {resolve.GetProductName()} {resolve.GetVersionString()}")
+            else:
+                print(export(resolve, args.approved_job.resolve(strict=True)))
+    except (OSError, ValueError, subprocess.SubprocessError) as exc:
         print(f"FrameCrew delivery: {exc}", file=sys.stderr)
         return 1
     return 0

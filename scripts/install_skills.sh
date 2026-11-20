@@ -22,3 +22,4 @@ for source in "$SRC"/*.md; do
 done
 cp "$SRC/../../scripts/check_windows_job.py" "$DEST/watcher-agent/check_windows_job.py"
 cp "$SRC/../../scripts/export_resolve.py" "$DEST/delivery-agent/export_resolve.py"
+cp "$SRC/../../scripts/export_resolve_in_app.lua" "$DEST/delivery-agent/export_resolve_in_app.lua"

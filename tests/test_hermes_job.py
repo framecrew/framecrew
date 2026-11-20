@@ -25,10 +25,16 @@ class HermesJobTests(unittest.TestCase):
                     return hermes_job.main()
 
             with patch.object(hermes_job, "orchestrate") as run:
-                self.assertEqual(action("approve"), 1)
-                run.assert_not_called()
-                with patch.object(sys, "platform", "win32"), patch.object(hermes_job, "check_windows"):
+                def readiness(folder):
+                    self.assertFalse((folder / ".framecrew-hermes.sqlite").exists())
+
+                with patch.object(sys, "platform", "win32"), patch.object(
+                    hermes_job, "check_windows", side_effect=readiness
+                ):
                     self.assertEqual(action("prepare"), 0)
+                run.assert_not_called()
+                self.assertEqual(action("approve"), 1)
+                run.assert_called_once()
                 self.assertEqual(action("approve"), 1)
                 run.assert_called_once()
             with closing(sqlite3.connect(project / ".framecrew-hermes.sqlite")) as db:

@@ -92,6 +92,13 @@ def main():
         folder = args.project.resolve(strict=True)
         if not folder.is_dir():
             raise ValueError("Project must be a directory")
+        if args.action == "prepare":
+            if sys.platform != "win32":
+                raise ValueError("This job entry point currently supports the Windows Watcher")
+            inputs = fingerprint(folder)
+            check_windows(folder)
+            if fingerprint(folder) != inputs:
+                raise ValueError("Inputs changed during the Watcher check")
         db = sqlite3.connect(folder / ".framecrew-hermes.sqlite", timeout=0)
         with db:
             db.execute("CREATE TABLE IF NOT EXISTS job (id INTEGER PRIMARY KEY, state TEXT, "
@@ -102,12 +109,6 @@ def main():
                              if row else {"state": "new"}))
             return 0
         if args.action == "prepare":
-            if sys.platform != "win32":
-                raise ValueError("This job entry point currently supports the Windows Watcher")
-            inputs = fingerprint(folder)
-            check_windows(folder)
-            if fingerprint(folder) != inputs:
-                raise ValueError("Inputs changed during the Watcher check")
             with db:
                 if db.execute("SELECT 1 FROM job WHERE id=1").fetchone():
                     raise ValueError("This project already has a job. Use status")

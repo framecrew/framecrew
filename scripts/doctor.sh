@@ -3,6 +3,25 @@
 set -uo pipefail
 cd "$(dirname "$0")/.."
 
+if [ "$#" -eq 0 ]; then
+  check_python='import sys; sys.exit(sys.version_info < (3, 11))'
+  python3 -c "$check_python" 2>/dev/null || python -c "$check_python" 2>/dev/null ||
+    { echo "Python 3.11 or newer is required." >&2; exit 1; }
+  for tool in ffmpeg ffprobe; do
+    command -v "$tool" >/dev/null || { echo "$tool is required." >&2; exit 1; }
+  done
+  ffmpeg -hide_banner -h filter=scale 2>&1 | grep reset_sar >/dev/null ||
+    { echo "Install FFmpeg 8 or newer." >&2; exit 1; }
+  ffmpeg -hide_banner -encoders 2>&1 | grep libx264 >/dev/null ||
+    { echo "FFmpeg must include the libx264 encoder." >&2; exit 1; }
+  echo "FrameCrew media tools are available."
+  exit 0
+fi
+if [ "$#" -ne 1 ] || [ "$1" != "--experimental-hermes" ]; then
+  echo "Usage: bash scripts/doctor.sh [--experimental-hermes]" >&2
+  exit 2
+fi
+
 pass=0
 fail=0
 
@@ -42,7 +61,10 @@ fi
 # --- Hermes ---
 HERMES_DIR="${HERMES_HOME:-$HOME/.hermes}"
 command -v hermes >/dev/null 2>&1 && ok "hermes CLI present" || bad "hermes CLI not found" "install Hermes (the agent runtime)"
-skill_count=$(ls "$HERMES_DIR"/skills/video/*.md 2>/dev/null | wc -l | tr -d ' ')
+skill_count=0
+for skill in "$HERMES_DIR"/skills/video/*.md; do
+  [ -f "$skill" ] && skill_count=$((skill_count+1))
+done
 [ "$skill_count" -ge 13 ] && ok "$skill_count skills loaded in Hermes" || bad "skills not loaded ($skill_count/13)" "run ./install.sh (or bash scripts/install_skills.sh)"
 [ -f "$HERMES_DIR/memories/user/model-routing.md" ] && ok "Hermes routing rules installed" || bad "routing rules missing" "run bash scripts/setup_hermes.sh"
 

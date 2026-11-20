@@ -8,6 +8,7 @@ gateway_state.json
 config/framecrew.yaml
 
 # --- Footage & per-project working dirs (never commit media) ---
+.framecrew/
 Projects/
 /Projects/
 raw/

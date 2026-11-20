@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # FrameCrew environment doctor — checks every dependency and prints how to fix it.
 set -uo pipefail
+cd "$(dirname "$0")/.."
 
 pass=0
 fail=0
@@ -8,18 +9,25 @@ fail=0
 ok()   { printf "  \033[32m✓\033[0m %s\n" "$1"; pass=$((pass+1)); }
 bad()  { printf "  \033[31m✗\033[0m %s\n     fix: %s\n" "$1" "$2"; fail=$((fail+1)); }
 
+if [ -x .venv/bin/python ]; then
+  export PATH="$(pwd)/.venv/bin:$PATH"
+  PYTHON="$(pwd)/.venv/bin/python"
+else
+  PYTHON=python3
+fi
+
 echo "FrameCrew doctor"
 echo "----------------"
 
 # --- CLI tools ---
 command -v ffmpeg   >/dev/null 2>&1 && ok "ffmpeg $(ffmpeg -version | head -1 | awk '{print $3}')" || bad "ffmpeg missing"      "brew install ffmpeg"
 command -v ffprobe  >/dev/null 2>&1 && ok "ffprobe present"                                          || bad "ffprobe missing"     "comes with ffmpeg: brew install ffmpeg"
-command -v scenedetect >/dev/null 2>&1 && ok "scenedetect present"                                   || bad "scenedetect missing" "pip install scenedetect --break-system-packages"
-command -v whisper  >/dev/null 2>&1 && ok "whisper present"                                          || bad "whisper missing"     "pip install openai-whisper --break-system-packages"
+command -v scenedetect >/dev/null 2>&1 && ok "scenedetect present"                                   || bad "scenedetect missing" "./.venv/bin/python -m pip install scenedetect --break-system-packages"
+command -v whisper  >/dev/null 2>&1 && ok "whisper present"                                          || bad "whisper missing"     "./.venv/bin/python -m pip install openai-whisper --break-system-packages"
 ( command -v magick >/dev/null 2>&1 || command -v convert >/dev/null 2>&1 ) && ok "ImageMagick present" || bad "ImageMagick missing" "brew install imagemagick"
-python3 -c "import watchdog" 2>/dev/null && ok "python watchdog present"                             || bad "watchdog missing"    "pip install watchdog --break-system-packages"
-python3 -c "import rembg"    2>/dev/null && ok "rembg present"                                        || bad "rembg missing"       "pip install rembg --break-system-packages"
-python3 -c "import realesrgan" 2>/dev/null && ok "realesrgan present"                                 || bad "realesrgan missing"  "pip install realesrgan --break-system-packages"
+"$PYTHON" -c "import watchdog" 2>/dev/null && ok "python watchdog present"                             || bad "watchdog missing"    "./.venv/bin/python -m pip install watchdog --break-system-packages"
+"$PYTHON" -c "import rembg"    2>/dev/null && ok "rembg present"                                        || bad "rembg missing"       "./.venv/bin/python -m pip install rembg --break-system-packages"
+"$PYTHON" -c "import realesrgan" 2>/dev/null && ok "realesrgan present"                                 || bad "realesrgan missing"  "./.venv/bin/python -m pip install realesrgan --break-system-packages"
 
 # --- LLM API (v0.1.0 is API-first) ---
 if [ -f .env ]; then
@@ -44,5 +52,5 @@ if [ -d "/Applications/DaVinci Resolve/DaVinci Resolve.app" ]; then ok "DaVinci 
 
 echo "----------------"
 echo "passed: $pass   failed: $fail"
-[ "$fail" -eq 0 ] && echo "All good. Next: ./tests/e2e_smoke.sh" || echo "Fix the items above, then re-run ./scripts/doctor.sh"
+[ "$fail" -eq 0 ] && echo "Environment checks passed. Run synthetic tests with bash tests/e2e_smoke.sh; this is not a real-footage acceptance test." || echo "Fix the items above, then re-run ./scripts/doctor.sh"
 exit "$fail"

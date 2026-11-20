@@ -31,6 +31,18 @@ jobs:
       - name: Lint skills (structure + secret scan)
         run: bash tests/lint_skills.sh
 
+      - name: Check Hermes skill installation layout
+        run: |
+          export HERMES_HOME="$RUNNER_TEMP/framecrew-hermes"
+          bash scripts/install_skills.sh
+          for source in skills/video/*.md; do
+            name="${source##*/}"
+            name="${name%.md}"
+            target="$HERMES_HOME/skills/video/$name/SKILL.md"
+            grep -Fx "name: $name" "$target"
+            tail -n +7 "$target" | diff - "$source"
+          done
+
       - name: Generate synthetic fixtures
         run: bash tests/fixtures/make_fixtures.sh
 

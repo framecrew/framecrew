@@ -62,7 +62,7 @@ fi
 HERMES_DIR="${HERMES_HOME:-$HOME/.hermes}"
 command -v hermes >/dev/null 2>&1 && ok "hermes CLI present" || bad "hermes CLI not found" "install Hermes (the agent runtime)"
 skill_count=0
-for skill in "$HERMES_DIR"/skills/video/*.md; do
+for skill in "$HERMES_DIR"/skills/video/*/SKILL.md; do
   [ -f "$skill" ] && skill_count=$((skill_count+1))
 done
 [ "$skill_count" -ge 13 ] && ok "$skill_count skills loaded in Hermes" || bad "skills not loaded ($skill_count/13)" "run ./install.sh (or bash scripts/install_skills.sh)"

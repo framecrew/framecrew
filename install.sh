@@ -4,9 +4,9 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 case "${1:-}" in
-  "") brew_packages=(python ffmpeg) ;;
-  --experimental-hermes) brew_packages=(python ffmpeg imagemagick) ;;
-  *) echo "Usage: bash install.sh [--experimental-hermes]" >&2; exit 2 ;;
+  --media-only) brew_packages=(python ffmpeg) ;;
+  ""|--experimental-hermes) brew_packages=(python ffmpeg imagemagick) ;;
+  *) echo "Usage: bash install.sh [--media-only]" >&2; exit 2 ;;
 esac
 
 echo "==> 1/6 Installing system tools (Homebrew)"
@@ -14,7 +14,7 @@ if ! command -v brew >/dev/null 2>&1; then
   echo "Homebrew not found. Install from https://brew.sh first." >&2; exit 1
 fi
 brew install "${brew_packages[@]}"
-if [ "$#" -eq 0 ]; then
+if [ "${1:-}" = "--media-only" ]; then
   bash scripts/doctor.sh
   exit
 fi
@@ -49,4 +49,4 @@ echo "Setup complete. Two things left:"
 echo "  1. Put your OPENAI_API_KEY in .env"
 echo "  2. Send the kickoff prompt in KICKOFF.md to Hermes once to wake the crew"
 echo
-echo "Then run ./scripts/doctor.sh to confirm, and drop footage + event.txt to start a job."
+echo "Run bash scripts/doctor.sh --experimental-hermes to check dependencies."

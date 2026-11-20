@@ -1,10 +1,10 @@
 # FrameCrew
 
-FrameCrew turns an ordered list of clips into a single 720p MP4. It runs locally with Python and FFmpeg, records each stage in SQLite, and checks that the video and audio decode before publishing the export.
+FrameCrew is designed to take footage and an event brief, ask for approval, and coordinate an edit through Hermes. The original workflow includes creative editing, quality checks, and delivery to MP4 and DaVinci Resolve. To set up the Hermes workflow on macOS, run `bash install.sh` and follow the [Hermes kickoff instructions](KICKOFF.md). The full workflow still needs an end-to-end acceptance run.
 
-## Quick start
+## Standalone MP4 utility
 
-You need Python 3.11 or newer and FFmpeg 8 or newer with `ffprobe` and `libx264`. On macOS with Homebrew, run `bash install.sh` from the repository root. On Windows, install the tools and put them on your PATH. No API key is needed.
+This utility turns an ordered list of clips into a single 720p MP4. It needs Python 3.11 or newer and FFmpeg 8 or newer with `ffprobe` and `libx264`. On macOS with Homebrew, run `bash install.sh --media-only`. On Windows, install the tools and put them on your PATH. No API key is needed.
 
 ```sh
 python3 framecrew.py run --job demo-job "clip one.mov" "clip two.mp4"

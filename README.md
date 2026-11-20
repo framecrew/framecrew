@@ -17,7 +17,7 @@ git clone https://github.com/framecrew/framecrew.git && cd framecrew
 cp .env.example .env            # add your OPENAI_API_KEY
 ./install.sh                    # deps + Hermes routing + loads all 13 skills
 ```
-Then use the kickoff instructions in [`KICKOFF.md`](KICKOFF.md) to attempt an integration run. **This is an experimental workflow, not a verified one-command editing product.**
+If using the Hermes CLI, start it with `bash scripts/run_hermes.sh` so the local Python media tools are on its `PATH`. Then use the kickoff instructions in [`KICKOFF.md`](KICKOFF.md) to attempt an integration run. **This is an experimental workflow, not a verified one-command editing product.**
 
 ---
 
@@ -51,7 +51,7 @@ Open `.env` and paste your `OPENAI_API_KEY` (and Telegram token if you have one)
 ```bash
 ./install.sh
 ```
-This installs the media tools, writes FrameCrew's model-routing rules into Hermes, loads all 13 agent skills into `~/.hermes/skills/video`, and creates your `~/FrameCrew/Projects` and `Templates` folders. Then run the environment check:
+This installs the media tools, writes FrameCrew's model-routing rules into Hermes, loads all 13 agent skills into `~/.hermes/skills/video`, and creates your `~/FrameCrew/Projects` and `Templates` folders. If starting Hermes from a terminal, use `bash scripts/run_hermes.sh` rather than launching it without the project environment. For a separately managed Hermes service, its runtime must likewise include the repository's `.venv/bin` on `PATH` (not yet integration-tested). Then run the environment check:
 
 ```bash
 ./scripts/doctor.sh
@@ -107,7 +107,7 @@ The [GitHub Actions workflow](.github/workflows/ci.yml) runs on macOS and invoke
 
 - Do not commit `.env`, API tokens, raw footage, or private project data.
 - Review `install.sh` before running. It invokes Homebrew, creates `.venv`, and installs Python media dependencies that can be substantial. It now fails if package installation fails, but full macOS installation remains unverified.
-- Run `./scripts/doctor.sh` after setup. A successful environment check does not establish that a finished video can be produced.
+- Run `./scripts/doctor.sh` after setup. Launch the Hermes CLI via `bash scripts/run_hermes.sh` to expose the project virtual environment. A successful environment check does not establish that a finished video can be produced.
 - Only use footage and music for which you have the necessary rights.
 
 ### To reach v0.1.0

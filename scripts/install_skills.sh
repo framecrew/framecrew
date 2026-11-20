@@ -21,3 +21,4 @@ for source in "$SRC"/*.md; do
   echo "Installed $name"
 done
 cp "$SRC/../../scripts/check_windows_job.py" "$DEST/watcher-agent/check_windows_job.py"
+cp "$SRC/../../scripts/export_resolve.py" "$DEST/delivery-agent/export_resolve.py"

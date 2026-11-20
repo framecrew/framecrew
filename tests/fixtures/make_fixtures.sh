@@ -2,7 +2,7 @@
 # Generate synthetic test footage so the suite needs no real assets.
 set -euo pipefail
 DIR="${1:-tests/.work/IntakeTest}"
-rm -rf "$DIR"; mkdir -p "$DIR/raw"
+mkdir -p "$DIR/raw"
 
 # 3 short clips: color bars + tone
 for i in 1 2 3; do

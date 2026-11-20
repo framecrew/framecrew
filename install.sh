@@ -8,10 +8,13 @@ echo "==> 1/6 Installing system tools (Homebrew)"
 if ! command -v brew >/dev/null 2>&1; then
   echo "Homebrew not found. Install from https://brew.sh first." >&2; exit 1
 fi
-brew install ffmpeg imagemagick || true
+brew install ffmpeg imagemagick
 
 echo "==> 2/6 Installing Python media tools"
-pip3 install --break-system-packages scenedetect openai-whisper watchdog rembg realesrgan || true
+python3 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install scenedetect openai-whisper watchdog rembg realesrgan
+export PATH="$(pwd)/.venv/bin:$PATH"
 
 echo "==> 3/6 Creating config and env (if missing)"
 [ -f config/framecrew.yaml ] || cp config/framecrew.example.yaml config/framecrew.yaml

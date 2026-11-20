@@ -79,6 +79,10 @@ The Editor Manager reads your `event.txt`, picks the style preset for the event 
 
 The agent instructions specify a Kanban card, a QC gate, and re-running failed stages. The current CI validates a limited QC fixture check, **not** those orchestration and recovery behaviors in Hermes.
 
+## Technical overview
+
+For a concise review of architecture, evidence, risks, and acceptance criteria, see [Technical Overview](docs/TECHNICAL_OVERVIEW.md).
+
 ## Testing and limitations
 
 ### What the current CI checks

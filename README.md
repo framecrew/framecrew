@@ -35,7 +35,7 @@ You need these on your Mac (Apple Silicon):
 - An **LLM API key** from any OpenAI-compatible provider (OpenAI, OpenRouter, Together, …)
 - A **Telegram bot** (optional) if you want the drop-and-confirm-on-your-phone flow
 
-The installer attempts to install common dependencies, but **some installation failures are ignored** (`|| true`). Use `./scripts/doctor.sh` to identify missing dependencies, and resolve those failures before attempting a real integration run. The installer uses `pip3 install --break-system-packages`; run it in an isolated test environment and review the commands before executing.
+The installer now fails on Homebrew/Python package-install errors and installs Python dependencies into the repository-local `.venv` rather than the system Python. Run `./scripts/doctor.sh` afterward to identify missing tools. **A clean installation has not yet been independently verified on a fresh Mac.**
 
 ### Step 2 — Get the code and add your key
 
@@ -85,7 +85,7 @@ The agent instructions specify a Kanban card, a QC gate, and re-running failed s
 
 The [GitHub Actions workflow](.github/workflows/ci.yml) runs on macOS and invokes:
 
-- `tests/lint_skills.sh`: checks Markdown skill structure and scans selected directories for a small set of secret-like patterns. **This is not comprehensive secret scanning.**
+- `tests/lint_skills.sh`: checks the exact 13-skill inventory, Markdown skill structure, and scans selected directories for a small set of secret-like patterns. **This is not comprehensive secret scanning.**
 - `tests/fixtures/make_fixtures.sh`: generates synthetic video/audio fixtures with FFmpeg.
 - `tests/test_cutting.sh`: concatenates generated clips and verifies that input files were not modified. This directly tests an FFmpeg command, **not the cutting agent's instructions or Hermes execution**.
 - `tests/test_qc.sh`: exercises a test-local QC function against complete and missing-LUT fixtures. This **does not execute the QC agent**.
@@ -102,7 +102,7 @@ The [GitHub Actions workflow](.github/workflows/ci.yml) runs on macOS and invoke
 ### Security and setup cautions
 
 - Do not commit `.env`, API tokens, raw footage, or private project data.
-- Review `install.sh` before running. Its package installation commands can hide failures and include `--break-system-packages`.
+- Review `install.sh` before running. It invokes Homebrew, creates `.venv`, and installs Python media dependencies that can be substantial. It now fails if package installation fails, but full macOS installation remains unverified.
 - Run `./scripts/doctor.sh` after setup. A successful environment check does not establish that a finished video can be produced.
 - Only use footage and music for which you have the necessary rights.
 
@@ -143,7 +143,7 @@ framecrew/
 ## Roadmap
 
 - [ ] Genericize skills fully against real footage
-- [x] One-shot installer + environment doctor
+- [x] One-shot installer + environment doctor implemented (fresh-Mac verification pending)
 - [x] Single kickoff prompt for Hermes
 - [x] Synthetic-fixture test harness + per-agent tests + QC fail-test
 - [x] CI (macOS runner)

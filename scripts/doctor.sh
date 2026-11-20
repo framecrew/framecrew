@@ -22,12 +22,12 @@ echo "----------------"
 # --- CLI tools ---
 command -v ffmpeg   >/dev/null 2>&1 && ok "ffmpeg $(ffmpeg -version | head -1 | awk '{print $3}')" || bad "ffmpeg missing"      "brew install ffmpeg"
 command -v ffprobe  >/dev/null 2>&1 && ok "ffprobe present"                                          || bad "ffprobe missing"     "comes with ffmpeg: brew install ffmpeg"
-command -v scenedetect >/dev/null 2>&1 && ok "scenedetect present"                                   || bad "scenedetect missing" "./.venv/bin/python -m pip install scenedetect --break-system-packages"
-command -v whisper  >/dev/null 2>&1 && ok "whisper present"                                          || bad "whisper missing"     "./.venv/bin/python -m pip install openai-whisper --break-system-packages"
+command -v scenedetect >/dev/null 2>&1 && ok "scenedetect present"                                   || bad "scenedetect missing" "./.venv/bin/python -m pip install scenedetect"
+command -v whisper  >/dev/null 2>&1 && ok "whisper present"                                          || bad "whisper missing"     "./.venv/bin/python -m pip install openai-whisper"
 ( command -v magick >/dev/null 2>&1 || command -v convert >/dev/null 2>&1 ) && ok "ImageMagick present" || bad "ImageMagick missing" "brew install imagemagick"
-"$PYTHON" -c "import watchdog" 2>/dev/null && ok "python watchdog present"                             || bad "watchdog missing"    "./.venv/bin/python -m pip install watchdog --break-system-packages"
-"$PYTHON" -c "import rembg"    2>/dev/null && ok "rembg present"                                        || bad "rembg missing"       "./.venv/bin/python -m pip install rembg --break-system-packages"
-"$PYTHON" -c "import realesrgan" 2>/dev/null && ok "realesrgan present"                                 || bad "realesrgan missing"  "./.venv/bin/python -m pip install realesrgan --break-system-packages"
+"$PYTHON" -c "import watchdog" 2>/dev/null && ok "python watchdog present"                             || bad "watchdog missing"    "./.venv/bin/python -m pip install watchdog"
+"$PYTHON" -c "import rembg"    2>/dev/null && ok "rembg present"                                        || bad "rembg missing"       "./.venv/bin/python -m pip install rembg"
+"$PYTHON" -c "import realesrgan" 2>/dev/null && ok "realesrgan present"                                 || bad "realesrgan missing"  "./.venv/bin/python -m pip install realesrgan"
 
 # --- LLM API (v0.1.0 is API-first) ---
 if [ -f .env ]; then

@@ -49,4 +49,4 @@ Before calling this an end-to-end video editing product, a test should demonstra
 
 ## Why this project is relevant to analytics and AI roles
 
-The transferable engineering focus is **orchestration, typed stage outputs, validation gates, failure isolation, and reproducible testing**. The repository demonstrates a concrete attempt to turn a multi-step task into an agent-guided workflow while making the distinction between what is specified, what is tested, and what remains unverified explicit.
+The transferable engineering focus is **orchestration design, named stage outputs, validation gates, failure isolation, and synthetic testing**. The repository demonstrates a concrete attempt to turn a multi-step task into an agent-guided workflow while making the distinction between what is specified, what is tested, and what remains unverified explicit.

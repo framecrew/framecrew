@@ -9,6 +9,7 @@ config/framecrew.yaml
 
 # --- Footage & per-project working dirs (never commit media) ---
 .framecrew/
+.framecrew-hermes.sqlite*
 Projects/
 /Projects/
 raw/

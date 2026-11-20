@@ -31,6 +31,18 @@ jobs:
       - name: Lint skills (structure + secret scan)
         run: bash tests/lint_skills.sh
 
+      - name: Check Hermes skill installation layout
+        run: |
+          export HERMES_HOME="$RUNNER_TEMP/framecrew-hermes"
+          bash scripts/install_skills.sh
+          for source in skills/video/*.md; do
+            name="${source##*/}"
+            name="${name%.md}"
+            target="$HERMES_HOME/skills/video/$name/SKILL.md"
+            grep -Fx "name: $name" "$target"
+            tail -n +7 "$target" | diff - "$source"
+          done
+
       - name: Generate synthetic fixtures
         run: bash tests/fixtures/make_fixtures.sh
 
@@ -39,3 +51,12 @@ jobs:
 
       - name: QC gate test (pass + fail)
         run: bash tests/test_qc.sh
+
+  windows-watcher:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m unittest discover -s tests -p test_windows_watcher.py -v

@@ -13,6 +13,13 @@ Reads `config/framecrew.yaml` for `paths.projects_root`.
 5. If any check fails, wait 2 minutes and retry from step 3.
 6. After all checks pass, wait a final 60-second safety buffer.
 
+On Windows, use the FrameCrew `scripts/check_windows_job.py` helper for steps
+3, 4, and 6. The Hermes installer also copies it alongside this skill. From
+the FrameCrew checkout, run `python scripts/check_windows_job.py "<absolute project path>"`.
+The helper needs Python 3.11 or newer. Treat only a successful exit and its
+`READY` message as readiness. If it fails, follow step 5. A readiness result
+does not grant permission to edit.
+
 ## Notify & confirm
 
 - Send a notification (Telegram if configured, otherwise log): `New job detected: <FolderName> — <N> clips, <duration>. All files stable. Start pipeline?`

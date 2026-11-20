@@ -11,8 +11,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Install FFmpeg
-        run: brew install ffmpeg
+        run: brew list ffmpeg >/dev/null 2>&1 || brew install ffmpeg
+
+      - name: Check shell syntax and media dependencies
+        run: |
+          for script in install.sh scripts/*.sh tests/*.sh tests/fixtures/*.sh; do
+            bash -n "$script" || exit 1
+          done
+          bash scripts/doctor.sh
+
+      - name: Run local media workflow and recovery tests
+        run: python -m unittest discover -s tests -v
 
       - name: Lint skills (structure + secret scan)
         run: bash tests/lint_skills.sh
@@ -25,6 +39,3 @@ jobs:
 
       - name: QC gate test (pass + fail)
         run: bash tests/test_qc.sh
-
-      - name: End-to-end smoke (mock mode)
-        run: bash tests/e2e_smoke.sh

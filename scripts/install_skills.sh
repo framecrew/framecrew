@@ -20,3 +20,4 @@ for source in "$SRC"/*.md; do
   } > "$DEST/$name/SKILL.md"
   echo "Installed $name"
 done
+cp "$SRC/../../scripts/check_windows_job.py" "$DEST/watcher-agent/check_windows_job.py"

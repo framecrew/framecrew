@@ -13,6 +13,11 @@ Reads `config/framecrew.yaml` for `paths.projects_root`.
 5. If any check fails, wait 2 minutes and retry from step 3.
 6. After all checks pass, wait a final 60-second safety buffer.
 
+On Windows, use the installed `check_windows_job.py` helper alongside this
+skill for steps 3, 4, and 6. Run it with Python 3.11 or newer and the absolute
+project path. Treat only a successful exit and its `READY` message as readiness.
+If it fails, follow step 5. Readiness does not grant permission to edit.
+
 ## Notify & confirm
 
 - Send a notification (Telegram if configured, otherwise log): `New job detected: <FolderName> — <N> clips, <duration>. All files stable. Start pipeline?`

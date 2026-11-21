@@ -1,43 +1,34 @@
 # FrameCrew
 
-FrameCrew turns an ordered list of clips into a single 720p MP4. It runs locally with Python and FFmpeg, records each stage in SQLite, and checks that the video and audio decode before publishing the export.
+FrameCrew uses Hermes to coordinate a video edit from footage and an `event.txt` brief. The workflow covers intake, proxies, rough cut, trim, color, titles, transitions, audio, quality checks, and delivery.
 
-## Quick start
+## Install
 
-You need Python 3.11 or newer and FFmpeg 8 or newer with `ffprobe` and `libx264`. On macOS with Homebrew, run `bash install.sh` from the repository root. On Windows, install the tools and put them on your PATH. No API key is needed.
+1. Open the [FrameCrew repository](https://github.com/framecrew/framecrew), choose **Code → Download ZIP**, and extract it to a folder you can keep.
+2. On **Windows**, double-click **Install FrameCrew.cmd**. On **macOS**, double-click **Install FrameCrew.command**, or run `bash install.sh` from the extracted folder.
+3. Wait for **Setup checks passed**. Complete any Windows, macOS, or vendor prompts that appear during installation.
 
-```sh
-python3 framecrew.py run --job demo-job "clip one.mov" "clip two.mp4"
-python3 framecrew.py status --job demo-job
-```
+The installer reuses compatible tools it finds and installs missing ones. It checks Hermes, Python, FFmpeg 8+, FFprobe, ImageMagick, PySceneDetect, Whisper, and Watchdog. Python media packages go in the repository’s `.venv`. Windows uses WinGet when system packages are missing. macOS uses Homebrew. Both use the [official Nous installer](https://hermes-agent.nousresearch.com/docs/getting-started/installation) if Hermes is missing.
 
-On Windows, use `python` in place of `python3`. The clips play in the order supplied. Open `demo-job/finished.mp4` when delivery completes. Use a new job folder for a different clip list or if the source files have changed.
+Setup registers the 13 FrameCrew skills in Hermes and preserves existing configuration, templates, and local skill edits. If a Windows machine needs WinGet, it must have Microsoft App Installer. Missing packages require internet access.
 
-## Stage contracts
+## Set up a project
 
-| Stage | Reads | Writes |
-| --- | --- | --- |
-| Normalize | Ordered, SHA-256-pinned source clips | One 1280×720 H.264 clip per input, with aspect-preserving padding, video normalized to 30 fps and stereo 48 kHz AAC. Silent sources get an audio track. |
-| Assemble | Normalized clips | A single stream-copied MP4 in the supplied clip order. |
-| QC | Assembled MP4 and normalized clips | A JSON report with the duration and media hash after stream checks, a duration comparison and a full audio/video decode. |
-| Deliver | QC-approved MP4 | `finished.mp4`, published through an atomic rename in the job folder. |
+1. Open **Run FrameCrew.cmd** on Windows or run `bash scripts/run_hermes.sh` on macOS. Configure your model provider in Hermes if needed.
+2. Save the footage in `.framecrew-work/Projects/<project>/raw/`.
+3. Copy an appropriate brief from `.framecrew-work/Templates/`, fill it out, and place it in the project folder as `event.txt`. Add the brief after the footage has finished copying.
+4. Follow the [Hermes kickoff](KICKOFF.md). Check the project name and clip count before approving the edit.
 
-The job database and intermediate files live in `<job>/.framecrew/`. A second runner for the same job gets a busy error. Keep the job on a local disk and leave its source paths and contents in place until delivery finishes.
+Change the working folders, title styling, event presets, and audio targets in `config/framecrew.yaml`. The installer leaves this file in place when you rerun setup.
 
-To resume, use the same job folder with no clip arguments:
+## Optional integrations
 
-```sh
-python3 framecrew.py run --job demo-job
-```
+- **Resolve Studio** is used for external project export. Install and activate Studio through Blackmagic if you need that delivery path.
+- **Telegram** can handle approval messages once you configure it. It is off in a fresh FrameCrew config.
+- **AI still-image enhancement** uses rembg and Real-ESRGAN. To add them, run `"Install FrameCrew.cmd" --with-stills` in Command Prompt on Windows or `bash install.sh --with-stills` on macOS.
 
-FrameCrew reuses stages whose saved artifact hashes still match. It restarts an interrupted stage, rebuilds from the first missing or changed artifact, and retries assembly after a QC failure. The status command shows the recorded stage and its error. Keep the folder if you need the job records or want to resume.
+## Check setup
 
-## Tests and scope
+Rerun the installer if a prerequisite is missing. It stops and reports the step that failed. Run the [kickoff](KICKOFF.md) on one project and verify the output files before relying on unattended jobs. Installation checks cover dependencies and skill registration. The full Hermes editing and delivery workflow still needs a live acceptance run.
 
-```sh
-python3 -m unittest discover -s tests -v
-```
-
-The suite generates landscape and portrait fixtures with different frame rates and audio layouts. It runs the workflow with real FFmpeg and checks clip order, duration, output reuse, QC failure recovery, interruption recovery and writer exclusion. The GitHub Actions workflow runs the suite on macOS.
-
-This release scope is a straight cut with audio and MP4 delivery. The Hermes skills, watcher and Telegram confirmation are experimental design material. DaVinci Resolve export, creative editing features, and production-footage acceptance are outside the current MVP. See the [original Hermes audit](docs/TECHNICAL_OVERVIEW.md) and [experimental kickoff instructions](KICKOFF.md).
+For an ordered straight cut without Hermes, run `python framecrew.py run --job output-job clip-one.mp4 clip-two.mp4` on Windows or use `python3` on macOS.

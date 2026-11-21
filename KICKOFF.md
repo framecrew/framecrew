@@ -1,6 +1,6 @@
 # FrameCrew — Kickoff Prompt
 
-Send this **once** to Hermes (Telegram or terminal) after running `./install.sh`. It wakes the whole crew in a single shot.
+Send this to Hermes after running the [FrameCrew installer](README.md). Launch Hermes from the FrameCrew checkout so it can find the local config and media tools.
 
 Copy everything in the box below:
 
@@ -9,10 +9,11 @@ Copy everything in the box below:
 ```
 You are running FrameCrew, a video-editing agent crew.
 
-1. Load every skill in ~/.hermes/skills/video (watcher, editor-manager, intake,
-   edit-team-lead, cutting, trimming, color, titles, transitions, audio,
-   enhancement, qc, delivery). Confirm each one loaded by name.
-2. Apply the routing rules in ~/.hermes/memories/user/model-routing.md.
+1. Load the installed FrameCrew skills by name (watcher-agent, editor-manager,
+   intake-agent, edit-team-lead, cutting-agent, trimming-agent, color-agent,
+   titles-agent, transitions-agent, audio-agent, enhancement-agent, qc-agent,
+   delivery-agent). Report any missing skill.
+2. Read the FrameCrew model routing notes in memories/model-routing.md.
 3. Read config/framecrew.yaml for brand, paths, and event-style presets.
 4. Activate the Watcher agent on the projects_root from config and keep watching.
 5. When a new folder gets an event.txt, run the stability checks, then message me
@@ -26,7 +27,7 @@ Reply with the list of skills you loaded and confirm the Watcher is active.
 
 ## What to expect back
 
-Hermes should reply with all 13 skills loaded and confirm the Watcher is listening on your `~/FrameCrew/Projects` folder. From then on you never touch this prompt again — just drop footage + `event.txt` and reply **Yes**.
+Verify folder detection with a test project before relying on the Watcher for unattended jobs. A reply alone does not prove that monitoring continues after the session ends.
 
 ## Re-running
 

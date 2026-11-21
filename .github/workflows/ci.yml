@@ -39,3 +39,31 @@ jobs:
 
       - name: QC gate test (pass + fail)
         run: bash tests/test_qc.sh
+
+  installer:
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check installation and safe reruns
+        run: python -m unittest discover -s tests -p test_installer.py -v
+      - name: Smoke-test the Windows launcher
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $env:HERMES_HOME = "$env:RUNNER_TEMP/framecrew-hermes"
+          $env:FRAMECREW_NO_PAUSE = "1"
+          & '.\Install FrameCrew.cmd' --skills-only
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if (@(Get-ChildItem "$env:HERMES_HOME/skills/video" -Filter SKILL.md -Recurse).Count -ne 13) { exit 1 }
+      - name: Smoke-test the macOS launcher
+        if: runner.os == 'macOS'
+        run: |
+          export HERMES_HOME="$RUNNER_TEMP/framecrew-hermes"
+          bash "Install FrameCrew.command" --skills-only
+          test "$(find "$HERMES_HOME/skills/video" -name SKILL.md | wc -l | tr -d ' ')" -eq 13

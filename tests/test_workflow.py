@@ -110,3 +110,23 @@ class MediaWorkflowTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("normalize:", result.stderr)
         self.assertFalse((self.job / "finished.mp4").exists())
+
+
+class IntakeProxyTests(unittest.TestCase):
+    def test_quarter_scale_rounds_an_odd_result_to_an_even_h264_size(self):
+        import shlex
+        skill = Path(framecrew.__file__).parent / "skills/video/intake-agent.md"
+        line = next(line for line in skill.read_text(encoding="utf-8").splitlines()
+                    if line.startswith("5. Create quarter-resolution"))
+        args = shlex.split(line.split("`")[1])
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "source.mp4"
+            proxy = Path(directory) / "proxy.mp4"
+            framecrew.ffmpeg("-f", "lavfi", "-i", "testsrc2=size=960x540:duration=0.2",
+                             "-c:v", "libx264", source)
+            args[args.index("input.mp4")] = str(source)
+            args[-1] = str(proxy)
+            subprocess.run(args, check=True, capture_output=True)
+            framecrew.ffmpeg("-xerror", "-i", proxy, "-f", "null", "-")
+            stream = framecrew.probe(proxy)["streams"][0]
+            self.assertEqual((stream["width"], stream["height"]), (240, 134))

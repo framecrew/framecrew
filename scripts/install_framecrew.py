@@ -10,6 +10,11 @@ import sys
 from tempfile import TemporaryDirectory
 from urllib.request import urlretrieve
 
+if __package__:
+    from .transcribe import ensure_model, ffmpeg_has_whisper
+else:
+    from transcribe import ensure_model, ffmpeg_has_whisper
+
 ROOT = Path(__file__).resolve().parents[1]
 WINDOWS = sys.platform == "win32"
 VENV_BIN = ROOT / ".venv" / ("Scripts" if WINDOWS else "bin")
@@ -18,7 +23,7 @@ LOCAL = Path(os.environ.get("LOCALAPPDATA") or Path.home())
 HERMES_HOME = Path(os.environ.get("HERMES_HOME") or
                    (LOCAL / "hermes" if WINDOWS else Path.home() / ".hermes")).expanduser()
 CORE = {"cv2": "scenedetect[opencv]", "scenedetect": "scenedetect[opencv]",
-        "yaml": "PyYAML", "whisper": "openai-whisper", "watchdog": "watchdog"}
+        "yaml": "PyYAML", "watchdog": "watchdog"}
 STILLS = {"rembg": "rembg[cpu]", "realesrgan": "realesrgan"}
 
 
@@ -200,7 +205,13 @@ def main():
             return 0
         launcher = ensure_hermes()
         ensure_media_tools()
-        ensure_python_packages(CORE | (STILLS if args.with_stills else {}))
+        packages = dict(CORE)
+        if WINDOWS and ffmpeg_has_whisper():
+            ensure_model()
+            print("Using FFmpeg's local Whisper filter for transcription.")
+        else:
+            packages["whisper"] = "openai-whisper"
+        ensure_python_packages(packages | (STILLS if args.with_stills else {}))
         install_profile()
         print(f"Hermes launcher: {launcher}")
         print("Setup checks passed. Hermes model sign-in and optional integrations are configured separately.")

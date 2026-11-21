@@ -6,7 +6,7 @@ Loudness targets come from `config/framecrew.yaml` (`audio.loudness`).
 
 ## Process
 
-1. Run Whisper locally on `final_edit.mp4` — export `transcript.txt` and `subtitles.srt` to `transcripts/`.
+1. Run `python scripts/transcribe.py "<project>/output/final_edit.mp4" "<project>/transcripts"` from the FrameCrew checkout with its local Python environment. It runs Whisper locally and writes `transcript.txt` and `subtitles.srt`. Stop and report a transcription error instead of creating placeholder files.
 2. Run FFmpeg `afftdn` for noise reduction.
 3. Normalize to the `Audio_Spec`:
    - `web_delivery` → -14 LUFS

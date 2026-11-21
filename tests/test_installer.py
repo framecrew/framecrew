@@ -5,6 +5,7 @@ import unittest
 from unittest.mock import patch
 
 from scripts import install_framecrew as installer
+from scripts import transcribe
 
 
 class InstallerTests(unittest.TestCase):
@@ -53,3 +54,10 @@ class InstallerTests(unittest.TestCase):
             ), patch.object(installer, "run") as run:
                 installer.ensure_python_packages(installer.CORE)
             run.assert_not_called()
+
+    def test_subtitle_and_text_artifacts_use_same_speech(self):
+        subtitles, text = transcribe.normalize_srt(
+            "0\n00:00:00,000 --> 00:00:01,000\nFrameCrew test.\n\n"
+        )
+        self.assertTrue(subtitles.startswith("1\n"))
+        self.assertEqual(text, "FrameCrew test.\n")

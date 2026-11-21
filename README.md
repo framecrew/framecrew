@@ -8,7 +8,7 @@ FrameCrew uses Hermes to coordinate a video edit from footage and an `event.txt`
 2. On **Windows**, double-click **Install FrameCrew.cmd**. On **macOS**, double-click **Install FrameCrew.command**, or run `bash install.sh` from the extracted folder.
 3. Wait for **Setup checks passed**. Complete any Windows, macOS, or vendor prompts that appear during installation.
 
-The installer reuses compatible tools it finds and installs missing ones. It checks Hermes, Python, FFmpeg 8+, FFprobe, ImageMagick, PySceneDetect, Whisper, and Watchdog. Python media packages go in the repository’s `.venv`. Windows uses WinGet when system packages are missing. macOS uses Homebrew. Both use the [official Nous installer](https://hermes-agent.nousresearch.com/docs/getting-started/installation) if Hermes is missing.
+The installer reuses compatible tools it finds and installs missing ones. It checks Hermes, Python, FFmpeg 8+, FFprobe, ImageMagick, PySceneDetect, Whisper, and Watchdog. Python media packages go in the repository’s `.venv`. On Windows, when FFmpeg includes its Whisper filter, setup uses that filter and a verified local model for transcription. This avoids the Python Whisper runtime on that path. Windows uses WinGet when system packages are missing. macOS uses Homebrew. Both use the [official Nous installer](https://hermes-agent.nousresearch.com/docs/getting-started/installation) if Hermes is missing.
 
 Setup registers the 13 FrameCrew skills in Hermes and preserves existing configuration, templates, and local skill edits. If a Windows machine needs WinGet, it must have Microsoft App Installer. Missing packages require internet access.
 

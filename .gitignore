@@ -42,3 +42,4 @@ venv/
 .DS_Store
 Thumbs.db
 *.log
+.framecrew-work/
